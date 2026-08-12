@@ -97,3 +97,50 @@ def verify_email(address: str) -> dict:
 
     return _result(email, "valid", "mx_record_found", _RISK_VALID,
                    syntax=True, disposable=False, mx=True)
+
+
+def clean_email_list(emails: list[str]) -> dict:
+    """Deduplicate and verify a list of emails for bulk list hygiene.
+
+    Duplicates are collapsed on the normalized form (so "A@x.com" and "a@x.com "
+    count once). Each unique address is run through `verify_email`; only `valid`
+    addresses make the cleaned list, while `risky` and `invalid` ones are
+    rejected with their reason. Returns summary counts, the cleaned list, and
+    the rejected entries.
+    """
+    seen = set()
+    unique = []
+    duplicates_removed = 0
+
+    # Deduplicate on the normalized address while preserving first-seen order.
+    for raw in emails:
+        normalized = raw.strip().lower()
+        if normalized in seen:
+            duplicates_removed += 1
+            continue
+        seen.add(normalized)
+        unique.append(normalized)
+
+    cleaned_list = []
+    rejected = []
+    counts = {"valid": 0, "risky": 0, "invalid": 0}
+
+    for email in unique:
+        result = verify_email(email)
+        counts[result["status"]] += 1
+        if result["status"] == "valid":
+            cleaned_list.append(result["email"])
+        else:
+            rejected.append({"email": result["email"], "reason": result["reason"]})
+
+    return {
+        "summary": {
+            "total": len(emails),
+            "valid": counts["valid"],
+            "risky": counts["risky"],
+            "invalid": counts["invalid"],
+            "duplicates_removed": duplicates_removed,
+        },
+        "cleaned_list": cleaned_list,
+        "rejected": rejected,
+    }

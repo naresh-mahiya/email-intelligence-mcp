@@ -33,12 +33,7 @@ def clean_email_list(emails: list[str]) -> dict:
     Returns summary statistics, a cleaned list of usable addresses, and a
     rejected list of addresses that failed with their reasons.
     """
-    return {
-        "summary": {"total": len(emails)},
-        "cleaned_list": [],
-        "rejected": [],
-        "reason": "not_implemented",
-    }
+    return verifier.clean_email_list(emails)
 
 
 @mcp.tool()
