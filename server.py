@@ -10,6 +10,8 @@ AI agents / LLM clients can discover and invoke them as structured tools:
 
 from mcp.server.fastmcp import FastMCP
 
+import verifier
+
 # Named server instance; the name is what clients show during tool discovery.
 mcp = FastMCP("inboxvalid")
 
@@ -21,11 +23,7 @@ def verify_email(address: str) -> dict:
     Returns the email, an overall status (valid/invalid/risky), a machine-readable
     reason, a risk_score, and a per-check breakdown (syntax/disposable/mx).
     """
-    return {
-        "email": address,
-        "status": "unknown",
-        "reason": "not_implemented",
-    }
+    return verifier.verify_email(address)
 
 
 @mcp.tool()
