@@ -10,6 +10,7 @@ AI agents / LLM clients can discover and invoke them as structured tools:
 
 from mcp.server.fastmcp import FastMCP
 
+import risk_engine
 import verifier
 
 # Named server instance; the name is what clients show during tool discovery.
@@ -43,11 +44,7 @@ def assess_signup_risk(address: str) -> dict:
     Returns a decision (allow/verify_email/manual_review/block), a risk_score,
     the signals behind it, and a human-readable recommendation.
     """
-    return {
-        "email": address,
-        "decision": "unknown",
-        "reason": "not_implemented",
-    }
+    return risk_engine.assess_signup_risk(address)
 
 
 if __name__ == "__main__":
