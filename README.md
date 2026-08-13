@@ -22,6 +22,28 @@ rather than re-implementing checks.
 
 ---
 
+## Demo
+
+📹 **[Watch the demo video](https://drive.google.com/file/d/1HgPeivRvxDa0lmaZ7IYYQIAxbbINeJJu/view?usp=sharing)** — the server connected to Claude as the MCP client, with each tool discovered and invoked live.
+
+**Tool discovery** — the three tools an agent can call:
+
+![Tool discovery](screenshots/tool-discovery.png)
+
+**`verify_email`**
+
+![verify_email example](screenshots/verify-example.png)
+
+**`clean_email_list`**
+
+![clean_email_list example](screenshots/clean-list-example.png)
+
+**`assess_signup_risk`**
+
+![assess_signup_risk example](screenshots/signup-risk-example.png)
+
+---
+
 ## Features
 
 - Email **syntax** validation (normalize + regex)
@@ -97,6 +119,14 @@ Add an entry to the client's MCP config (`claude_desktop_config.json`), pointing
 ```
 
 Restart the client and the three tools appear in tool discovery.
+
+For **Claude Code (CLI)**, register the server with one command:
+
+```bash
+claude mcp add inboxvalid -- python D:/assignments/context/tvaram_mcp/server.py
+```
+
+Then run `/mcp` in a session to confirm the three tools are connected.
 
 ---
 
@@ -194,14 +224,3 @@ Signals a production, InboxValid-scale platform would add:
 - Async / batched verification for large lists
 - Result caching (short-TTL per domain) and retry-with-backoff on DNS
 - Rate limiting and per-client quotas
-
----
-
-## Demo
-
-Screenshots of the tools running in an MCP client live in `screenshots/`:
-
-- `tool-discovery.png` — the three tools listed by the client
-- `verify-example.png` — a `verify_email` call and response
-- `clean-list-example.png` — a `clean_email_list` call and response
-- `signup-risk-example.png` — an `assess_signup_risk` call and response
